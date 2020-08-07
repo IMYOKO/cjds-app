@@ -1,0 +1,222 @@
+/* 1.7787  0.56 */
+.game-table {
+	position: fixed;
+	left: 0;
+	top: 0;
+}
+
+.font-style {
+	color: #fff;
+	text-align: center;
+	font-size: 14.56rpx; // 26
+}
+
+.fz-24 {
+	font-size: 13.44rpx; // 24
+}
+
+.center {
+	justify-content: center;
+	align-items: center;
+}
+
+.game-table-wrapper {
+	background-color: rgba(0, 0, 0, 0.5);
+	flex: 1;
+}
+
+.game-top {
+	height: 44.8rpx; // 80
+	border-bottom-width: 1rpx;
+	border-bottom-style: solid;
+	border-bottom-color: rgba(255, 255, 255, .5);
+	justify-content: space-between;
+	flex-direction: row;
+}
+
+.back {
+	width: 61.6rpx; // 110
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+.back-text {
+	color: #fff;
+	font-size: 14.56rpx; // 26
+}
+
+.money-wrapper {
+	flex: 1;
+	padding: 0 20px;
+	flex-direction: row;
+	justify-content: space-around;
+}
+
+.time-wrapper {
+	width: 56rpx; // 100
+	background-color: #e92525;
+	justify-content: center;
+	align-items: center;
+}
+
+.money-item {
+	flex: 1;
+	border-width: 1rpx;
+	border-style: solid;
+	border-color: transparent;
+}
+
+.button-wrapper {
+	flex-direction: row;
+	justify-content: space-around;
+}
+
+.cancel-wrapper {
+	width: 56rpx; // 100
+	background-color: #fff;
+}
+
+.cancel {
+	color: #e92625;
+	font-size: 14.56rpx; // 26
+}
+
+.ok-wrapper {
+	width: 78.4rpx; // 140
+	background-color: #068f00;
+}
+
+.ok-button {
+	color: #fff;
+}
+
+.money-img {
+	width: 35.84rpx; // 64
+	height: 35.84rpx; // 64
+}
+
+.active {
+	background-color: #047d01;
+	border-width: 1rpx;
+	border-style: solid;
+	border-color: #1dbd13;
+}
+
+.all-money {
+	font-size: 16.8rpx; // 30
+	color: #fff;
+	width: 35.84rpx;
+	height: 35.84rpx;
+	border-radius: 35.84rpx; // 64
+	border-width: 1rpx;
+	border-style: solid;
+	border-color: #fff;
+	text-align: center;
+	line-height: 35.84rpx;
+}
+
+/* dice start */
+.dice-wrapper {
+	flex: 1;
+	padding-top: 12rpx;
+	flex-direction: row;
+	justify-content: space-between;
+
+}
+
+.dice-wrapper-item {
+	margin: 5rpx;
+	flex: 0.3;
+	flex-direction: row;
+	justify-content: space-around;
+	flex-wrap: wrap;
+}
+
+.dice-midder {
+	flex: 0.5;
+}
+
+.dice-content {
+	flex: 0.43;
+	margin-bottom: 2px;
+	background-color: rgba(255, 255, 255, 0.2);
+	border-width: 0.56px;
+	border-style: solid;
+	border-color: rgba(255, 255, 255, 0.5);
+	flex-direction: column;
+}
+
+.dice-content-active {
+	background-color: #077d00;
+	border-width: 0.56px;
+	border-style: solid;
+	border-color: #1dbd13;
+}
+
+.dice-content-midder {
+	flex: 0.333;
+}
+
+.dice-img-box {
+	flex-direction: row;
+	justify-content: center;
+	margin: 0 0 2rpx;
+}
+
+.dice-img {
+	width: 30rpx;
+	height: 30rpx;
+	margin: 4rpx 3rpx 0;
+}
+
+.dice-money-box {
+	flex: 1;
+	height: 16rpx; // 40
+	text-align: center;
+	justify-content: center;
+	border-bottom-width: 0.56px;
+	border-bottom-style: solid;
+	border-bottom-color: rgba(255, 255, 255, 0.2);
+	align-items: center;
+	justify-content: center;
+	border-color: rgba(255, 255, 255, 1);
+}
+
+.dice-money-item {
+	font-weight: bold;
+}
+
+.dice-text {
+	width: 66rpx;
+	height: 30rpx;
+	margin: 4rpx 0 0;
+	justify-content: center;
+	align-items: center;
+}
+
+.dice-text-item {
+	height: 30rpx;
+	padding: 0 10rpx;
+	line-height: 30rpx;
+	background-color: #fff;
+	border-width: 0.56px;
+	border-style: solid;
+	border-color: #000;
+	justify-content: center;
+}
+
+.dice-text-item-font {
+	color: #000;
+	font-weight: bold;
+}
+
+/* dice end */
+
+.dice-table-bottom {
+	padding: 0 10rpx;
+}
+
+.bottom-font {
+	text-align: left;
+}

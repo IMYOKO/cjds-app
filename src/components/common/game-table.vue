@@ -1,0 +1,60 @@
+<template>
+	<view class="game-table-wrapper">
+		<table class="game-table">
+			<tr>
+				<td class="game-table-td" v-for="({num, DS}, index) in tableList" :key="index">
+					<view class="table-box" :class="{'table-box-0': DS === 0 && item, 'table-box-1': DS === 1 && item}" v-for="(item, eq) in num"
+					 :key="`num-${eq}`">
+						{{item}}
+					</view>
+				</td>
+			</tr>
+		</table>
+	</view>
+</template>
+
+<script>
+	export default {
+		props: {
+			tableList: Array
+		}
+	}
+</script>
+
+<style lang="less" scoped>
+	@import url('~@/assets/styles/common.less');
+	
+	@tableBgColor: #15110e;
+	@tableTdBgColor: #26211c;
+
+	.game-table-wrapper {
+
+		.game-table {
+			width: 100%;
+			font-size: 12/@rem;
+			background-color: @tableBgColor;
+
+			.game-table-td {
+				padding: 0;
+				background-color: @tableTdBgColor;
+
+				.table-box {
+					width: 100%;
+					height: 34/@rem;
+					font-size: 24/@rem;
+					text-align: center;
+					line-height: 34/@rem;
+					border-bottom: 1px solid @tableBgColor;
+
+					&-0 {
+						background-color: #0544b8;
+					}
+
+					&-1 {
+						background-color: #bf0d0b;
+					}
+				}
+			}
+		}
+	}
+</style>

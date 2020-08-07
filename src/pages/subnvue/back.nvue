@@ -1,0 +1,32 @@
+<template>
+	<view class="back" @click="goHome">
+		<text class='span'>首页</text>
+	</view>
+</template>
+
+<script>
+	export default {
+		methods: {
+			goHome() {
+				uni.redirectTo({
+					url: '/pages/home'
+				});
+			}
+		}
+	}
+</script>
+
+<style>
+	.back {
+		width: 64px;
+		height: 40px;
+		background-color: rgba(255, 255, 255, 0.5);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.span {
+		color: #fff;
+		font-size: 14px; // 26
+	}
+</style>

@@ -1,16 +1,101 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "uni-app"
+	"pages": [{
+		"path": "pages/home",
+		"style": {
+			"navigationBarTitleText": "首页"
+		}
+	}, {
+		"path": "pages/login",
+		"style": {
+			"navigationBarTitleText": "登录"
+		}
+	}, {
+		"path": "pages/game",
+		"style": {
+			"navigationBarTitleText": "游戏",
+			"pageOrientation": "landscape",
+			"app-plus": {
+				"subNVues": [{
+					"id": "gameTable",
+					"path": "pages/subnvue/game",
+					"style": {
+						"position": "popup",
+						"left": "0",
+						"top": "0",
+						"width": "100%",
+						"height": "100%",
+						"zindex": 2000,
+						"background": "transparent"
+					}
+				}]
 			}
 		}
-	],
+	}, {
+		"path": "pages/register",
+		"style": {
+			"navigationBarTitleText": "注册"
+		}
+	}, {
+		"path": "pages/video",
+		"style": {
+			"navigationBarTitleText": "视频",
+			"pageOrientation": "landscape",
+			"app-plus": {
+				"subNVues": [{
+					"id": "back",
+					"path": "pages/subnvue/back",
+					"style": {
+						"position": "popup",
+						"left": "0",
+						"top": "0",
+						"width": "100%",
+						"height": "100%",
+						"zindex": 2000,
+						"background": "transparent"
+					}
+				}]
+			}
+		}
+	}, {
+		"path": "pages/order",
+		"style": {
+			"navigationBarTitleText": "订单"
+		}
+	}, {
+		"path": "pages/password",
+		"style": {
+			"navigationBarTitleText": ""
+		}
+	}, {
+		"path": "pages/recharge",
+		"style": {
+			"navigationBarTitleText": ""
+		}
+	}, {
+		"path": "pages/rules",
+		"style": {
+			"navigationBarTitleText": ""
+		}
+	}, {
+		"path": "pages/vip",
+		"style": {
+			"navigationBarTitleText": ""
+		}
+	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
+		"navigationBarTitleText": "",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#000",
+		"pageOrientation": "landscape",
+		"app-plus": {
+			"titleNView": false,
+			"animationType": "none",
+			"bounce": "none"
+		},
+		"h5": {
+			"titleNView": false,
+			"animationType": "none"
+		}
 	}
 }

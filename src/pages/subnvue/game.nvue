@@ -1,0 +1,484 @@
+<template>
+	<div class="game-table">
+		<div class="game-table-wrapper">
+			<!-- top start -->
+			<div class="game-top" v-if="visible">
+				<!-- div class="back" @click="goHome">
+					<text class="back-text">首页</text>
+				</div> -->
+				<div class="back-top"></div>
+				<div class="money-wrapper">
+					<div class="money-item center" :class="{'active':  diceMoney === money}" v-for="money in moneyType" :key="money"
+					 @click="chooseMoney(money)">
+						<image class="money-img" src="@/static/images/game/money_20@2x.png" mode="" v-if="money === 20"></image>
+						<image class="money-img" src="@/static/images/game/money_50@2x.png" mode="" v-if="money === 50"></image>
+						<image class="money-img" src="@/static/images/game/money_100@2x.png" mode="" v-if="money === 100"></image>
+						<image class="money-img" src="@/static/images/game/money_200@2x.png" mode="" v-if="money === 200"></image>
+						<image class="money-img" src="@/static/images/game/money_500@2x.png" mode="" v-if="money === 500"></image>
+						<image class="money-img" src="@/static/images/game/money_1000@2x.png" mode="" v-if="money === 1000"></image>
+						<text class="all-money" v-if="money === 'All'">{{money}}</text>
+					</div>
+				</div>
+				<div class="time-wrapper">
+					<text class="font-style">30</text>
+				</div>
+				<div class="button-wrapper">
+					<div class="cancel-wrapper center" @click="onCancel">
+						<text class="cancel">清空</text>
+					</div>
+					<div class="cancel-wrapper ok-wrapper center" @click="onOk">
+						<text class="cancel ok-button">确定</text>
+					</div>
+				</div>
+			</div>
+			<!-- top end -->
+
+			<!-- dice start -->
+			<div class="dice-wrapper" v-if="visible">
+				<div class="dice-wrapper-item" v-for="(diceItem, index) in diceData" :key='index' :class="{'dice-item-lb': index !==1,'dice-midder': index ===1}">
+					<div class="dice-content" :class="{'dice-content-midder': index === 1, 'dice-content-active': item.money > 0}"
+					 v-for="(item, eq) in diceItem" :key='item.type' @click="chooseDice(item)">
+						<div class="dice-money-box">
+							<text class="font-style dice-money-item" v-if="item.money > 0">{{item.money}}</text>
+						</div>
+						<div class="dice-action-box">
+							<div class="dice-img-box" v-if="['dan', 'dan1', 'shuang', 'shuang1'].includes(item.type)">
+								<div class="dice-text">
+									<div class="dice-text-item">
+										<text class="font-style fz-20 dice-text-item-font">{{item.name}}</text>
+									</div>
+								</div>
+							</div>
+							<div class="dice-img-box" v-else>
+								<image class="dice-img" src="@/static/images/game/dice-1@2x.png" mode="" v-if="item.number[0] === 1"></image>
+								<image class="dice-img" src="@/static/images/game/dice-2@2x.png" mode="" v-if="item.number[0] === 2"></image>
+								<image class="dice-img" src="@/static/images/game/dice-3@2x.png" mode="" v-if="item.number[0] === 3"></image>
+								<image class="dice-img" src="@/static/images/game/dice-4@2x.png" mode="" v-if="item.number[0] === 4"></image>
+								<image class="dice-img" src="@/static/images/game/dice-5@2x.png" mode="" v-if="item.number[0] === 5"></image>
+								<image class="dice-img" src="@/static/images/game/dice-6@2x.png" mode="" v-if="item.number[0] === 6"></image>
+
+								<image class="dice-img" src="@/static/images/game/dice-1@2x.png" mode="" v-if="item.number[1] === 1"></image>
+								<image class="dice-img" src="@/static/images/game/dice-2@2x.png" mode="" v-if="item.number[1] === 2"></image>
+								<image class="dice-img" src="@/static/images/game/dice-3@2x.png" mode="" v-if="item.number[1] === 3"></image>
+								<image class="dice-img" src="@/static/images/game/dice-4@2x.png" mode="" v-if="item.number[1] === 4"></image>
+								<image class="dice-img" src="@/static/images/game/dice-5@2x.png" mode="" v-if="item.number[1] === 5"></image>
+								<image class="dice-img" src="@/static/images/game/dice-6@2x.png" mode="" v-if="item.number[1] === 6"></image>
+							</div>
+							<div class="dice-type">
+								<text class="font-style fz-20">{{item.scale}}</text>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- dice end -->
+
+			<div class="dice-table-bottom">
+				<div class='money'>
+					<text class="font-style bottom-font">余额：{{userInfo.Banlance}}</text>
+				</div>
+				<div class='money'>
+					<text class="font-style bottom-font">下注：{{orderMoney}}</text>
+				</div>
+			</div>
+
+			<div class="bottom-show" @click="showHide">
+				<text class="shou-qi" v-if="visible">收起</text>
+				<text class="shou-qi" v-else>展开</text>
+			</div>
+		</div>
+
+		<div class="bottom-home" @click="goHome">
+			<text class="font-style">首页</text>
+		</div>
+	</div>
+</template>
+
+<script>
+	import {
+		mapState,
+		mapGetters,
+		mapMutations,
+		mapActions
+	} from "vuex";
+	import {
+		toast,
+		showLoading
+	} from '@/utils/index.js';
+	export default {
+		data() {
+			return {
+				visible: true
+			}
+		},
+		computed: {
+			...mapState('User', ['userInfo']),
+			...mapState('Games', ['id', 'moneyType', 'diceMoney', 'diceData']),
+			...mapGetters('Games', ['orderMoney', 'payType', 'doubleMoney', 'singularMoney', 'temaMoney', 'limitMoney']),
+		},
+		methods: {
+			...mapMutations("Games", ['updateDiceMoney', 'clearDiceData', 'updateDiceData']),
+			...mapActions("Games", ['addOrder']),
+			chooseMoney(value) {
+				if (typeof this.diceMoney === 'string') {
+					if (typeof value === 'string') {
+						return
+					} else {
+						this.clearDiceData()
+					}
+				}
+				if (typeof value === 'string') {
+					this.clearDiceData()
+				}
+				this.updateDiceMoney(value)
+			},
+			chooseDice(item) {
+				if (!this.diceMoney) {
+					toast('请先选择下注金额')
+					return;
+				}
+				const banlance = this.userInfo.Banlance;
+				let money = typeof this.diceMoney === 'string' ? banlance : this.diceMoney;
+				if (typeof this.diceMoney === 'number') {
+					if (money + this.orderMoney > banlance) {
+						toast('下注金额不能大于现有金额');
+						return;
+					}
+				}
+				this.updateDiceData({ ...item,
+					money
+				});
+			},
+			onCancel() {
+				this.updateDiceMoney(0)
+				this.clearDiceData()
+			},
+			onOk() {
+				if (this.diceMoney === 0) {
+					toast('请先选择下注金额')
+					return;
+				}
+				if (this.orderMoney === 0) {
+					toast('请先选择下注类型')
+					return;
+				}
+				if (this.orderMoney > this.userInfo.Banlance) {
+					toast('下注金额不能大于现有金额')
+					return;
+				}
+				if (this.singularMoney > 0) {
+					if (this.singularMoney < this.limitMoney.singularMoneyLimit[0]) {
+						toast('下注金额小于个人限注')
+						return
+					}
+					if (this.singularMoney > this.limitMoney.singularMoneyLimit[1]) {
+						toast('下注金额大于个人限注')
+						return
+					}
+				}
+				if (this.temaMoney > 0) {
+					if (this.temaMoney < this.limitMoney.temaMoneyLimit[0]) {
+						toast('下注金额小于个人特码限注')
+						return
+					}
+					if (this.temaMoney > this.limitMoney.temaMoneyLimit[1]) {
+						toast('下注金额大于个人特码限注')
+						return
+					}
+				}
+				if (this.doubleMoney > 0) {
+					if (this.doubleMoney < this.limitMoney.doubleMoneyLimit[0]) {
+						toast('下注金额小于个人对子限注')
+						return
+					}
+					if (this.doubleMoney > this.limitMoney.doubleMoneyLimit[1]) {
+						toast('下注金额大于个人对子限注')
+						return
+					}
+				}
+				const payload = {
+					GameTableId: this.id,
+					PlayType: this.payType,
+					Money: this.orderMoney
+				}
+				this.addOrder(payload)
+			},
+			goHome() {
+				uni.redirectTo({
+					url: '/pages/home'
+				});
+			},
+			showHide() {
+				console.log(this.visible)
+				this.visible = !this.visible
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	/* 1.7787  0.56 */
+	.game-table {
+		position: fixed;
+		left: 0;
+		top: 0;
+	}
+
+	.font-style {
+		color: #fff;
+		text-align: center;
+		font-size: 14px; // 26
+	}
+
+	.fz-24 {
+		font-size: 14px; // 24
+	}
+
+	.center {
+		justify-content: center;
+		align-items: center;
+	}
+
+	.game-table-wrapper {
+		flex: 1;
+	}
+
+	.game-top {
+		height: 40px; // 80
+		border-bottom-width: 1rpx;
+		border-bottom-style: solid;
+		border-bottom-color: rgba(255, 255, 255, .5);
+		justify-content: space-between;
+		flex-direction: row;
+		background-color: rgba(0, 0, 0, 0.5);
+	}
+
+	.back {
+		width: 64px; // 110
+		justify-content: center;
+		align-items: center;
+		background-color: rgba(255, 255, 255, 0.5);
+	}
+
+
+	.back-top {
+		width: 64px;
+	}
+
+	.back-text {
+		color: #fff;
+		font-size: 14px; // 26
+	}
+
+	.money-wrapper {
+		flex: 1;
+		padding: 0 20px;
+		flex-direction: row;
+		justify-content: space-around;
+	}
+
+	.time-wrapper {
+		width: 50px; // 100
+		background-color: #e92525;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.money-item {
+		flex: 1;
+		border-width: 1rpx;
+		border-style: solid;
+		border-color: transparent;
+	}
+
+	.button-wrapper {
+		flex-direction: row;
+		justify-content: space-around;
+	}
+
+	.cancel-wrapper {
+		width: 50px; // 100
+		background-color: #fff;
+	}
+
+	.cancel {
+		color: #e92625;
+		font-size: 14px; // 26
+	}
+
+	.ok-wrapper {
+		width: 90px; // 140
+		background-color: #068f00;
+	}
+
+	.ok-button {
+		color: #fff;
+	}
+
+	.money-img {
+		width: 34px; // 64
+		height: 34px; // 64
+	}
+
+	.active {
+		background-color: #047d01;
+		border-width: 1rpx;
+		border-style: solid;
+		border-color: #1dbd13;
+	}
+
+	.all-money {
+		font-size: 14px; // 30
+		color: #fff;
+		width: 34px;
+		height: 34px;
+		border-radius: 34px; // 64
+		border-width: 1rpx;
+		border-style: solid;
+		border-color: #fff;
+		text-align: center;
+		line-height: 34px;
+	}
+
+	/* dice start */
+	.dice-wrapper {
+		flex: 1;
+		padding-top: 12rpx;
+		flex-direction: row;
+		justify-content: space-between;
+		background-color: rgba(0, 0, 0, 0.5);
+	}
+
+	.dice-wrapper-item {
+		margin: 5px;
+		flex: 0.25;
+		flex-direction: row;
+		justify-content: space-around;
+		flex-wrap: wrap;
+	}
+
+	.dice-midder {
+		flex: 0.5;
+	}
+
+	.dice-content {
+		flex: 0.45;
+		margin-bottom: 5px;
+		background-color: rgba(255, 255, 255, 0.2);
+		border-width: 0.56px;
+		border-style: solid;
+		border-color: rgba(255, 255, 255, 0.5);
+		flex-direction: column;
+	}
+
+	.dice-content-active {
+		background-color: #077d00;
+		border-width: 0.56px;
+		border-style: solid;
+		border-color: #1dbd13;
+	}
+
+	.dice-content-midder {
+		flex: 0.25;
+	}
+
+	.dice-img-box {
+		flex-direction: row;
+		justify-content: center;
+		margin: 0 0 2px;
+	}
+
+	.dice-img {
+		width: 30px;
+		height: 30px;
+		margin: 4px 3px 0;
+	}
+
+	.dice-money-box {
+		flex: auto;
+		height: 16px; // 40
+		text-align: center;
+		justify-content: center;
+		border-bottom-width: 0.56px;
+		border-bottom-style: solid;
+		border-bottom-color: rgba(255, 255, 255, 0.2);
+		align-items: center;
+		justify-content: center;
+		border-color: rgba(255, 255, 255, 1);
+	}
+
+	.dice-money-item {
+		font-weight: bold;
+	}
+
+	.dice-text {
+		width: 66px;
+		height: 30px;
+		margin: 4rpx 0 0;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.dice-text-item {
+		height: 30px;
+		padding: 0 10rpx;
+		line-height: 30px;
+		background-color: #fff;
+		border-width: 0.56px;
+		border-style: solid;
+		border-color: #000;
+		justify-content: center;
+	}
+
+	.dice-text-item-font {
+		color: #000;
+		font-weight: bold;
+	}
+	/* dice end */
+
+	.dice-table-bottom {
+		padding: 0 10rpx;
+		flex-direction: row;
+		position: fixed;
+		left: 0;
+		bottom: 0;
+	}
+
+	.bottom-font {
+		text-align: left;
+	}
+
+	.money {
+		margin-right: 20px;
+	}
+
+	.bottom-show {
+		height: 40px;
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		z-index: 1000;
+	}
+
+	.shou-qi {
+		width: 40px;
+		height: 40px;
+		line-height: 40px;
+		font-size: 14px;
+		color: #fff;
+		text-align: center;
+		border-radius: 20px;
+		background-color: rgba(255, 255, 255, 0.5);
+	}
+
+	.bottom-home {
+		width: 64px;
+		height: 40px;
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: 1000;
+		background-color: rgba(255, 255, 255, 0.5);
+		justify-content: center;
+	}
+</style>
