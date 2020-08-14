@@ -1,10 +1,11 @@
 // 公共提示
+const DELAY = 3000
 export const toast = (option) => {
 	if (typeof option === 'string') {
 		uni.showToast({
 			title: option,
 			icon: 'none',
-			duration: 2000
+			duration: DELAY
 		});
 	} else {
 		const {
@@ -15,7 +16,7 @@ export const toast = (option) => {
 		uni.showToast({
 			title,
 			icon: 'none',
-			duration: 2000,
+			duration: DELAY,
 			success,
 			fail
 		});

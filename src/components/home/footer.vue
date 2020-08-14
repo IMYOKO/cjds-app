@@ -22,6 +22,7 @@
 	import iconSetting from "@/assets/images/home/icon_setting@2x.png";
 	import iconPassword from "@/assets/images/home/icon_password@2x.png";
 	import iconChangePW from "@/assets/images/home/icon_changePW@2x.png";
+	import homeBgMp3 from "@/assets/mp3/home_bg.mp3";
 	export default {
 		props: {
 			showFooter: Boolean
@@ -151,7 +152,7 @@
 				innerAudioContext.autoplay = false;
 				innerAudioContext.loop = true;
 				innerAudioContext.volume = 0.6;
-				innerAudioContext.src = 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/audio/music.mp3';
+				innerAudioContext.src = homeBgMp3;
 				innerAudioContext.onPlay(() => {
 					console.log('开始播放');
 				});

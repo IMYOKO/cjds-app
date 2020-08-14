@@ -65,7 +65,6 @@
 			showFooter: Boolean
 		},
 		mounted() {
-			this.getGameTable()
 			this.getRankList()
 			this.getGG()
 		},
@@ -77,7 +76,7 @@
 			...mapState('Games', ['gameTableList', 'rankList', 'gameList'])
 		},
 		methods: {
-			...mapActions('Games', ['getGameTable', "getRankList"]),
+			...mapActions('Games', ["getRankList"]),
 			...mapActions('Common', ['getGG']),
 			goGamePage(id) {
 				uni.redirectTo({

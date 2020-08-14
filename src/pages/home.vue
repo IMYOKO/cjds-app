@@ -22,6 +22,7 @@
 			return {
 				title: 'Hello',
 				timer: null,
+				tableTimer: null,
 				showFooter: true
 			}
 		},
@@ -31,23 +32,39 @@
 			Content
 		},
 		onShow() {
-			this.getUserInfo(0)
-			this.timer = setInterval(() => {
-				this.getUserInfo(0)
-			}, 15000)
+			this.updateUserInfo()
+			this.updateGameTable()
+		},
+		onHide() {
+			clearTimeout(this.timer)
+			clearTimeout(this.tableTimer)
 		},
 		onUnload() {
-			clearInterval(this.timer)
+			clearTimeout(this.timer)
+			clearTimeout(this.tableTimer)
 		},
 		computed: {
 			...mapState('User', ['userInfo']),
 		},
 		methods: {
 			...mapActions("User", ["getUserInfo"]),
+			...mapActions('Games', ['getGameTable']),
 			goLoginPage() {
 				uni.redirectTo({
 					url: '/pages/login'
 				});
+			},
+			updateUserInfo() {
+				this.getUserInfo(0)
+				this.timer = setTimeout(() => {
+					this.updateUserInfo()
+				}, 15000)
+			},
+			updateGameTable() {
+				this.getGameTable()
+				this.tableTimer = setTimeout(() => {
+					this.updateGameTable()
+				}, 15000)
 			},
 			showFooterFn() {
 				this.showFooter = !this.showFooter

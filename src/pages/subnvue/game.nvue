@@ -20,11 +20,15 @@
 					</div>
 				</div>
 				<div class="time-wrapper">
-					<text class="font-style">30</text>
+					<template v-if="timeData">
+						<text class="font-style" v-if="nowTime < timeData.startBet">—</text>
+						<text class="font-style" v-else-if="nowTime > timeData.endBet">—</text>
+						<text class="font-style fz-24" v-else>{{timeData.endBet - nowTime}}</text>
+					</template>
 				</div>
 				<div class="button-wrapper">
 					<div class="cancel-wrapper center" @click="onCancel">
-						<text class="cancel">清空</text>
+						<text class="cancel">取消</text>
 					</div>
 					<div class="cancel-wrapper ok-wrapper center" @click="onOk">
 						<text class="cancel ok-button">确定</text>
@@ -65,7 +69,7 @@
 								<image class="dice-img" src="@/static/images/game/dice-6@2x.png" mode="" v-if="item.number[1] === 6"></image>
 							</div>
 							<div class="dice-type">
-								<text class="font-style fz-20">{{item.scale}}</text>
+								<text class="font-style">{{item.scale}}</text>
 							</div>
 						</div>
 					</div>
@@ -86,10 +90,22 @@
 				<text class="shou-qi" v-if="visible">收起</text>
 				<text class="shou-qi" v-else>展开</text>
 			</div>
+			
+			<div class="bottom-show jilu" @click="goOrder">
+				<text class="shou-qi">记录</text>
+			</div>
 		</div>
 
 		<div class="bottom-home" @click="goHome">
 			<text class="font-style">首页</text>
+		</div>
+		
+		<div class="xz-time" v-if="!visible">
+			<template v-if="timeData">
+				<text class="font-style" v-if="nowTime < timeData.startBet">—</text>
+				<text class="font-style" v-else-if="nowTime > timeData.endBet">—</text>
+				<text class="font-style fz-24" v-else>{{timeData.endBet - nowTime}}</text>
+			</template>
 		</div>
 	</div>
 </template>
@@ -108,8 +124,21 @@
 	export default {
 		data() {
 			return {
-				visible: true
+				visible: true,
+				timeData: null,
+				nowTime: null,
+				timesCurrent: null,
+				timer: null
 			}
+		},
+		onLoad() {
+			this.getKj()
+		},
+		onHide() {
+			clearTimeout(this.timer)
+		},
+		onUnload() {
+			clearTimeout(this.timer)
 		},
 		computed: {
 			...mapState('User', ['userInfo']),
@@ -118,7 +147,8 @@
 		},
 		methods: {
 			...mapMutations("Games", ['updateDiceMoney', 'clearDiceData', 'updateDiceData']),
-			...mapActions("Games", ['addOrder']),
+			...mapActions("Games", ['addOrder', 'Kj']),
+			...mapActions("User", ["getUserInfo"]),
 			chooseMoney(value) {
 				if (typeof this.diceMoney === 'string') {
 					if (typeof value === 'string') {
@@ -153,7 +183,7 @@
 				this.updateDiceMoney(0)
 				this.clearDiceData()
 			},
-			onOk() {
+			async onOk() {
 				if (this.diceMoney === 0) {
 					toast('请先选择下注金额')
 					return;
@@ -196,21 +226,70 @@
 						return
 					}
 				}
+				if ((this.timeData == null) || (this.timeData && (this.nowTime < this.timeData.startBet || this.nowTime > this.timeData
+						.endBet))) {
+					toast('未到下注时间')
+					return
+				}
 				const payload = {
 					GameTableId: this.id,
 					PlayType: this.payType,
 					Money: this.orderMoney
 				}
-				this.addOrder(payload)
+				await this.addOrder(payload)
+				this.getUserInfo(this.id)
 			},
 			goHome() {
 				uni.redirectTo({
 					url: '/pages/home'
 				});
 			},
+			goOrder() {
+				uni.redirectTo({
+					url: `/pages/order?id=${this.id}`
+				});
+			},
 			showHide() {
 				console.log(this.visible)
 				this.visible = !this.visible
+			},
+			async getKj() {
+				try {
+					const res = await this.Kj()
+					console.log('res: ', res)
+					if(res.playTime === 0) {
+					  return
+					}
+					this.timeData = res
+					this.nowTime = res.nowSystem
+					this.timesCurrent = res.nextDraw - res.nowSystem + 2
+					this.updateTimes();
+				} catch (error) {
+					console.log(error)
+				}
+			},
+			updateTimes() {
+				this.timer = setTimeout(() => {
+					this.timesCurrent--
+					this.nowTime++
+					if(this.nowTime === this.timeData.startBet) {
+						const { first, second } = this.timeData
+						toast(`当前开奖结果为：${first}:${second}`)
+						this.getUserInfo(this.id)
+					}
+					if (this.timesCurrent === 0) {
+						clearTimeout(this.timer)
+						this.clearKjTime()
+						this.getKj()
+						return
+					}
+					this.updateTimes()
+				}, 1000)
+			},
+			clearKjTime() {
+				this.timeData = null
+				this.nowTime = null
+				this.timesCurrent = null
 			}
 		}
 	}
@@ -231,7 +310,7 @@
 	}
 
 	.fz-24 {
-		font-size: 14px; // 24
+		font-size: 24px; // 24
 	}
 
 	.center {
@@ -343,7 +422,7 @@
 	/* dice start */
 	.dice-wrapper {
 		flex: 1;
-		padding-top: 12rpx;
+		padding-top: 2px;
 		flex-direction: row;
 		justify-content: space-between;
 		background-color: rgba(0, 0, 0, 0.5);
@@ -414,7 +493,7 @@
 	.dice-text {
 		width: 66px;
 		height: 30px;
-		margin: 4rpx 0 0;
+		margin: 4px 0 0;
 		justify-content: center;
 		align-items: center;
 	}
@@ -434,11 +513,15 @@
 		color: #000;
 		font-weight: bold;
 	}
+
 	/* dice end */
 
 	.dice-table-bottom {
-		padding: 0 10rpx;
+		/* padding: 0 10rpx; */
+		/* width: 200px; */
+		width: 1334rpx;
 		flex-direction: row;
+		justify-content: center;
 		position: fixed;
 		left: 0;
 		bottom: 0;
@@ -456,6 +539,14 @@
 		height: 40px;
 		position: absolute;
 		right: 0;
+		bottom: 0;
+		z-index: 1000;
+	}
+	
+	.jilu {
+		height: 40px;
+		position: absolute;
+		left: 0px;
 		bottom: 0;
 		z-index: 1000;
 	}
@@ -479,6 +570,17 @@
 		top: 0;
 		z-index: 1000;
 		background-color: rgba(255, 255, 255, 0.5);
+		justify-content: center;
+	}
+	
+	.xz-time {
+		width: 50px;
+		height: 40px;
+		position: absolute;
+		right: 140px;
+		top: 0;
+		z-index: 1000;
+		background-color: #e92525;
 		justify-content: center;
 	}
 </style>

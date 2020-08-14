@@ -49,7 +49,7 @@ const getUserInfo = (data) => {
 	DS：单双类型
  */
 const getGameTable = (data) => {
-    return request.post(`${baseURL}/GetGameTable`, data, true);
+    return request.post(`${baseURL}/GetGameTable`, data);
 }
 
 /**
@@ -158,6 +158,13 @@ const getGG = () => {
     return request.post(`${baseURL}/GetGG`, {}, true);
 }
 
+/**
+ * getKj 获取开奖时间
+ */
+const getKj = () => {
+    return request.get(`${baseURL}/getKj`, {});
+}
+
 export default {
     login,
 	register,
@@ -175,5 +182,6 @@ export default {
 	getWithdrawal,
 	getBankInfo,
 	getZNX,
-	getGG
+	getGG,
+	getKj
 }

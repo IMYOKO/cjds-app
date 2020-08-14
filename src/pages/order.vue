@@ -15,6 +15,9 @@
 				</view>
 			</view>
 		</Headers>
+		<view class="back" @click="goGame" v-if="id">
+			<text>返回</text>
+		</view>
 		<view class="order-content">
 			<view class="table-wrapper">
 				<table>
@@ -39,9 +42,9 @@
 						<td>{{item.XZMoney}}</td>
 						<td>{{item.SY}}</td>
 						<td>
-							<text v-if="item.Status === 0" class="cd" @click="handleClick(item.Id)">撤单</text>
+							<!-- <text v-if="item.Status === 0" class="cd" @click="handleClick(item.Id)">撤单</text> -->
 							<text v-if="item.Status === 1">已开奖</text>
-							<text v-if="item.Status === 2">已撤单</text>
+							<!-- <text v-if="item.Status === 2">已撤单</text> -->
 						</td>
 					</tr>
 				</table>
@@ -62,13 +65,20 @@
 	export default {
 		data() {
 			return {
-				DayType: 1
+				DayType: 1,
+				id: null
 			}
 		},
 		onShow() {
 			this.getOrder({
 				DayType: this.DayType
 			})
+		},
+		onLoad(option) {
+			const { id } = option
+			if (id) {
+				this.id = id
+			}
 		},
 		components: {
 			Headers
@@ -101,7 +111,12 @@
 				this.getOrder({
 					DayType: type
 				})
-			}
+			},
+			goGame() {
+				uni.redirectTo({
+					url: `/pages/game?id=${this.id}`
+				});
+			},
 		}
 	}
 </script>
@@ -114,6 +129,20 @@
 		font-size: 28/@rem;
 		background-color: #1e1a17;
 		padding-top: 88/@rem;
+	}
+	
+	.back {
+		color: #fff;
+		width: 120/@rem;
+		height: 78/@rem;
+		font-size: 26/@rem;
+		line-height: 78/@rem;
+		text-align: center;
+		background-color: #4f4f4f;
+		position: fixed;
+		left: 0;
+		top: 0;
+		z-index: 1010;
 	}
 
 	.header {

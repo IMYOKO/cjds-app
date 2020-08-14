@@ -1,5 +1,8 @@
 import apis from "@/api/apis";
-import { toast, showLoading } from "@/utils/index.js";
+import {
+	toast,
+	showLoading
+} from "@/utils/index.js";
 import {
 	defaultDiceData,
 	moneyType,
@@ -79,21 +82,40 @@ const mutations = {
 	updateGameTableId(state, id) {
 		state.id = id
 	},
-	updateGameList(state, list) {
-		state.gameTableList = list.GameTableList
-		const gameList = list.List
+	updateGameList(state, data) {
+		state.gameTableList = data.game
+		const gameList = data.list.reverse()
+		// gameList.map(item => {
+		// 	const len = item.num.length
+		// 	if (len < 6) {
+		// 		for (let i = 0; i < 6; i++) {
+		// 			if (!item.num[i]) {
+		// 				item.num.push('')
+		// 			}
+		// 		}
+		// 	}
+		// 	return item
+		// })
+		const tempList = []
 		gameList.map(item => {
-			const len = item.num.length
-			if (len < 6) {
+			const arritem = []
+			item.reverse().map((i, eq) => {
+				if (i[0] > 0) {
+					const a = i
+					a.push((i[0] + i[1]) % 2)
+					arritem.push(a)
+				}
+			})
+			if (arritem.length < 6) {
 				for (let i = 0; i < 6; i++) {
-					if (!item.num[i]) {
-						item.num.push('')
+					if (!arritem[i]) {
+						arritem.push([0, 0])
 					}
 				}
 			}
-			return item
+			tempList.push(arritem)
 		})
-		state.gameList = gameList
+		state.gameList = tempList
 	},
 	updateRankList(state, list) {
 		state.rankList = list
@@ -169,20 +191,33 @@ const actions = {
 	}, payload) {
 		try {
 			await apis.addOrder(payload)
-			// toast('下单成功');
-			uni.showModal({
-				title: '提示',
-				content: '下单成功',
-				confirmText: "确认",
-				showCancel: false,
-				success: () => {
-					commit('updateDiceMoney', 0)
-					commit('clearDiceData')
-				}
-			})
+			toast('下单成功');
+			commit('updateDiceMoney', 0)
+			commit('clearDiceData')
+			// uni.showModal({
+			// 	title: '提示',
+			// 	content: '下单成功',
+			// 	confirmText: "确认",
+			// 	showCancel: false,
+			// 	success: () => {
+			// 		commit('updateDiceMoney', 0)
+			// 		commit('clearDiceData')
+			// 	}
+			// })
 		} catch (error) {
 			toast('下单失败');
 			throw Error(error)
+		}
+	},
+	async Kj({
+		commit
+	}) {
+		try {
+			const res = await apis.getKj()
+			return Promise.resolve(res);
+		} catch (error) {
+			console.log('sss')
+			return Promise.reject(error);
 		}
 	}
 }

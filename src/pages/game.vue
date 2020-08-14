@@ -24,13 +24,9 @@
 			// #ifdef APP-PLUS  
 			this.plusReady()
 			// #endif
-
 			const id = option.id || 0
 			this.updateGameTableId(id)
 			this.getUserInfo(id)
-			this.timer = setInterval(() => {
-				this.getUserInfo(id)
-			}, 15000)
 			this.getGameTable()
 		},
 		onHide() {
@@ -40,12 +36,11 @@
 		},
 		onUnload() {
 			this.clearData()
-			clearInterval(this.timer)
 		},
 		methods: {
 			...mapMutations("Games", ['updateDiceMoney', 'clearDiceData', 'updateGameTableId']),
 			...mapActions("User", ["getUserInfo"]),
-			...mapActions("Games", ["getGameTable"]),
+			...mapActions("Games", ["getGameTable", "getKj"]),
 			clearData() {
 				this.updateDiceMoney(0)
 				this.clearDiceData()
