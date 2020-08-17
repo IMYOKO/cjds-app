@@ -139,10 +139,130 @@ export const doubleData = [{
 	scale: DICE_SCALE.doubles
 }]
 
+// export const defaultDiceData = [
+// 	doubleData,
+// 	temaData,
+// 	singularData
+// ]
+
+const diceDanItem01 = [{
+	type: '1:2',
+	number: [1, 2],
+	money: 0,
+	scale: DICE_SCALE.singular
+}]
+
+const diceDanItem02 = [{
+	type: '3:4',
+	number: [3, 4],
+	money: 0,
+	scale: DICE_SCALE.tema
+},{
+	type: '1:4',
+	number: [1, 4],
+	money: 0,
+	scale: DICE_SCALE.tema
+},{
+	type: '1:6',
+	number: [1, 6],
+	money: 0,
+	scale: DICE_SCALE.tema
+},
+{
+	type: '2:3',
+	number: [2, 3],
+	money: 0,
+	scale: DICE_SCALE.tema
+}]
+
+const diceDanItem03 = [{
+	type: 'dan1',
+	name: '单',
+	money: 0,
+	scale: DICE_SCALE.nomal
+}]
+
+const diceDanItem04 = [{
+	type: '2:5',
+	number: [2, 5],
+	money: 0,
+	scale: DICE_SCALE.tema
+}, {
+	type: '3:6',
+	number: [3, 6],
+	money: 0,
+	scale: DICE_SCALE.tema
+}, {
+	type: '4:5',
+	number: [4, 5],
+	money: 0,
+	scale: DICE_SCALE.tema
+}, {
+	type: '5:6',
+	number: [5, 6],
+	money: 0,
+	scale: DICE_SCALE.tema
+}]
+
+const diceDanItem05 = [{
+	type: 'shuang',
+	name: '吃双数',
+	money: 0,
+	scale: DICE_SCALE.nomal
+}]
+
+const diceShuangItem01 = [{type: '1:3',
+	number: [1, 3],
+	money: 0,
+	scale: DICE_SCALE.singular
+}]
+
+const diceShuangItem02 = [{
+	type: '3:5',
+	number: [3, 5],
+	money: 0,
+	scale: DICE_SCALE.tema
+},{
+	type: '1:5',
+	number: [1, 5],
+	money: 0,
+	scale: DICE_SCALE.tema
+},{
+	type: '2:4',
+	number: [2, 4],
+	money: 0,
+	scale: DICE_SCALE.tema
+},{
+	type: '2:6',
+	number: [2, 6],
+	money: 0,
+	scale: DICE_SCALE.tema
+},{
+	type: '4:6',
+	number: [4, 6],
+	money: 0,
+	scale: DICE_SCALE.tema
+}]
+
+const diceShuangItem03 = [{
+	type: 'shuang1',
+	name: '双',
+	money: 0,
+	scale: DICE_SCALE.nomal
+}]
+
+const diceShuangItem04 = doubleData
+
+const diceShuangItem05 = [{
+	type: 'dan',
+	name: '吃单数',
+	money: 0,
+	scale: DICE_SCALE.nomal
+}]
+
 export const defaultDiceData = [
-	doubleData,
-	temaData,
-	singularData
+	[diceDanItem01, diceDanItem02, diceDanItem03, diceDanItem04, diceDanItem05],
+	[diceShuangItem01, diceShuangItem02, diceShuangItem03, diceShuangItem04, diceShuangItem05]
 ]
 
 export const moneyType = [20, 50, 100, 200, 500, 1000, 'All'];

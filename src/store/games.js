@@ -25,23 +25,27 @@ const state = {
 const getters = {
 	orderMoney(state) {
 		let money = 0
-		state.diceData.forEach(diceItem => {
-			diceItem.forEach(item => {
-				money += item.money
+		state.diceData.forEach(diceDataItem => {
+			diceDataItem.forEach(diceItem => {
+				diceItem.forEach(item => {
+					money += item.money
+				})
 			})
 		})
 		return money
 	},
 	payType(state) {
 		const arr = []
-		state.diceData.forEach(diceItem =>
-			diceItem.forEach(({
-				money,
-				type
-			}) => {
-				if (money) {
-					arr.push(`${type}|${money}`)
-				}
+		state.diceData.forEach(diceDataItem =>
+			diceDataItem.forEach(diceItem => {
+				diceItem.forEach(({
+					money,
+					type
+				}) => {
+					if (money) {
+						arr.push(`${type}|${money}`)
+					}
+				})
 			})
 		)
 		return arr.toString()
@@ -125,41 +129,47 @@ const mutations = {
 	},
 	updateDiceData(state, payload) {
 		const newDiceData = state.diceData.slice(0)
-		const newArr = newDiceData.map((diceItem) => {
-			const newDiceItem = diceItem.map((item) => {
-				let newItem = item;
-				// All in 的时候先清除其他的金额
-				if (typeof state.diceMoney === 'string') {
-					newItem = {
-						...newItem,
-						money: 0
+		const newArr = newDiceData.map((diceDataItem) => {
+			const newDiceDataItem = diceDataItem.map((diceItem) => {
+				const newDiceItem = diceItem.map((item) => {
+					let newItem = item;
+					// All in 的时候先清除其他的金额
+					if (typeof state.diceMoney === 'string') {
+						newItem = {
+							...newItem,
+							money: 0
+						}
 					}
-				}
-				if (payload.type === newItem.type) {
-					const money = payload.money + newItem.money
+					if (payload.type === newItem.type) {
+						const money = payload.money + newItem.money
+						return {
+							...newItem,
+							money
+						}
+					}
 					return {
-						...newItem,
-						money
+						...newItem
 					}
-				}
-				return {
-					...newItem
-				}
+				})
+				return newDiceItem
 			})
-			return newDiceItem
+			return newDiceDataItem
 		})
 		state.diceData = newArr;
 	},
 	clearDiceData(state) {
 		const newDiceData = state.diceData.slice(0)
-		const newArr = newDiceData.map((diceItem) => {
-			const newItem = diceItem.map((item) => {
-				return {
-					...item,
-					money: 0
-				}
+		const newArr = newDiceData.map((diceDataItem) => {
+			const newDiceDataItem = diceDataItem.map((diceItem) => {
+				const newItem = diceItem.map((item) => {
+					return {
+						...item,
+						money: 0
+					}
+				})
+				return newItem
 			})
-			return newItem
+			return newDiceDataItem
 		})
 		state.diceData = newArr;
 	}
