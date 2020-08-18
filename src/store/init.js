@@ -105,7 +105,7 @@ export const temaData = [{
 	number: [5, 6],
 	money: 0,
 	scale: DICE_SCALE.tema
-},]
+}, ]
 
 export const doubleData = [{
 	type: '1:1',
@@ -157,18 +157,19 @@ const diceDanItem02 = [{
 	number: [3, 4],
 	money: 0,
 	scale: DICE_SCALE.tema
-},{
-	type: '1:4',
-	number: [1, 4],
-	money: 0,
-	scale: DICE_SCALE.tema
-},{
+}, {
 	type: '1:6',
 	number: [1, 6],
 	money: 0,
 	scale: DICE_SCALE.tema
-},
-{
+}]
+
+const diceDanItem02_2 = [{
+	type: '1:4',
+	number: [1, 4],
+	money: 0,
+	scale: DICE_SCALE.tema
+}, {
 	type: '2:3',
 	number: [2, 3],
 	money: 0,
@@ -188,13 +189,15 @@ const diceDanItem04 = [{
 	money: 0,
 	scale: DICE_SCALE.tema
 }, {
-	type: '3:6',
-	number: [3, 6],
-	money: 0,
-	scale: DICE_SCALE.tema
-}, {
 	type: '4:5',
 	number: [4, 5],
+	money: 0,
+	scale: DICE_SCALE.tema
+}]
+
+const diceDanItem04_2 = [{
+	type: '3:6',
+	number: [3, 6],
 	money: 0,
 	scale: DICE_SCALE.tema
 }, {
@@ -211,7 +214,8 @@ const diceDanItem05 = [{
 	scale: DICE_SCALE.nomal
 }]
 
-const diceShuangItem01 = [{type: '1:3',
+const diceShuangItem01 = [{
+	type: '1:3',
 	number: [1, 3],
 	money: 0,
 	scale: DICE_SCALE.singular
@@ -222,24 +226,26 @@ const diceShuangItem02 = [{
 	number: [3, 5],
 	money: 0,
 	scale: DICE_SCALE.tema
-},{
-	type: '1:5',
-	number: [1, 5],
-	money: 0,
-	scale: DICE_SCALE.tema
-},{
+}, {
 	type: '2:4',
 	number: [2, 4],
 	money: 0,
 	scale: DICE_SCALE.tema
-},{
-	type: '2:6',
-	number: [2, 6],
-	money: 0,
-	scale: DICE_SCALE.tema
-},{
+}, {
 	type: '4:6',
 	number: [4, 6],
+	money: 0,
+	scale: DICE_SCALE.tema
+}]
+
+const diceShuangItem02_2 = [{
+	type: '1:5',
+	number: [1, 5],
+	money: 0,
+	scale: DICE_SCALE.tema
+}, {
+	type: '2:6',
+	number: [2, 6],
 	money: 0,
 	scale: DICE_SCALE.tema
 }]
@@ -251,7 +257,8 @@ const diceShuangItem03 = [{
 	scale: DICE_SCALE.nomal
 }]
 
-const diceShuangItem04 = doubleData
+const diceShuangItem04 = [doubleData[0], doubleData[2], doubleData[4]]
+const diceShuangItem04_2 = [doubleData[1], doubleData[3], doubleData[5]]
 
 const diceShuangItem05 = [{
 	type: 'dan',
@@ -261,8 +268,10 @@ const diceShuangItem05 = [{
 }]
 
 export const defaultDiceData = [
-	[diceDanItem01, diceDanItem02, diceDanItem03, diceDanItem04, diceDanItem05],
-	[diceShuangItem01, diceShuangItem02, diceShuangItem03, diceShuangItem04, diceShuangItem05]
+	[diceDanItem01, diceDanItem02, diceDanItem02_2, diceDanItem03, diceDanItem04, diceDanItem04_2, diceDanItem05],
+	[diceShuangItem01, diceShuangItem02, diceShuangItem02_2, diceShuangItem03, diceShuangItem04, diceShuangItem04_2,
+		diceShuangItem05
+	]
 ]
 
 export const moneyType = [20, 50, 100, 200, 500, 1000, 'All'];
@@ -280,11 +289,13 @@ export const doubleTypeArry = ['1:1', '2:2', '3:3', '4:4', '5:5', '6:6']
 
 export const getMoney = (diceData, typeArry = []) => {
 	let money = 0
-	diceData.forEach(diceItem => {
-		diceItem.forEach(item => {
-			if (typeArry.includes(item.type)) {
-				money += item.money
-			}
+	diceData.forEach(diceDataItem => {
+		diceDataItem.forEach(diceItem => {
+			diceItem.forEach(item => {
+				if (typeArry.includes(item.type)) {
+					money += item.money
+				}
+			})
 		})
 	})
 	return money
