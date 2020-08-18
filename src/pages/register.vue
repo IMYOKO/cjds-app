@@ -1,8 +1,8 @@
 <template>
 	<view class="register">
-		<view class="register-form-wrapper">
+		<view class="register-form-wrapper register-form-wrapper-scroll">
 			<view class="title">游戏注册</view>
-			<view class="login-form-content">
+			<view class="login-form-content login-form-content-inner">
 				<view class="form-item">
 					<input v-model="Phone" type="number" maxlength="11" placeholder="手机号码">
 				</view>
@@ -180,6 +180,11 @@
 			font-size: 30/@rem;
 			line-height: 64/@rem;
 			background-color: #100e0b;
+		}
+
+		.register-form-wrapper-scroll {
+			overflow-y: auto;
+			padding-bottom: 30/@rem;
 		}
 
 		.login-form-content {
