@@ -2,7 +2,7 @@
 	<div class="game-table" :class="{'game-table-bg': visible}">
 		<div class="game-table-wrapper">
 			<!-- top start -->
-			<div class="game-top" v-if="visible">
+			<div class="game-top" :class="{'opacity-0': !visible}">
 				<!-- div class="back" @click="goHome">
 					<text class="back-text">首页</text>
 				</div> -->
@@ -76,17 +76,19 @@
 				</div>
 			</div> -->
 			<!-- dice end -->
-
-			<template v-if="showtable && visible">
-				<div class="dice-table">
-					<div class="dice-table-tr" v-for="(list, index) in gameList" :key='index'>
-						<div class="dice-table-td" v-for="(item, eq) in list" :key='`${index}-${eq}`'  :class="{'table-box-0': item[2] === 1 && item[0] > 0, 'table-box-1': item[2] === 0 && item[0] > 0}">
-							<text class="dice-table-text" v-if="item[0] > 0">{{item[0]}}:{{item[1]}}</text>
+			
+			<template>
+				<div class="dice-table-wrapper" :class="{'opacity-0': !showtable || !visible}">
+					<div class="dice-table">
+						<div class="dice-table-tr" v-for="(list, index) in gameList" :key='index'>
+							<div class="dice-table-td" v-for="(item, eq) in list" :key='`${index}-${eq}`'  :class="{'table-box-0': item[2] === 1 && item[0] > 0, 'table-box-1': item[2] === 0 && item[0] > 0}">
+								<text class="dice-table-text" v-if="item[0] > 0">{{item[0]}}:{{item[1]}}</text>
+							</div>
 						</div>
 					</div>
 				</div>
 			</template>
-			<template v-else-if="visible">
+			<template>
 				<!-- dice new start  -->
 				<!-- <div class="dice">
 					<div class="dice-wrapper" v-for="(diceDataItem, index) in diceData" :key="index" :class="{'dice-wrapper-bottom': index > 0}">
@@ -126,7 +128,7 @@
 				<!-- dice new end  -->
 				
 				<!-- dice new2 start  -->
-				<div class="dice-xz-table">
+				<div class="dice-xz-table" :class="{'opacity-0': showtable  || !visible}">
 					<!-- <div class="dice-xz-table-tr" v-for="(diceDataItem, index) in diceData" :key='index'>
 						<div class="dice-xz-table-td" v-for="(diceItem, eq) in diceDataItem" :key="`${index}-${eq}`">
 							<div class="dice-xz-wrapper" v-for="item in diceItem" :key="item">
@@ -556,7 +558,10 @@
 					<text class="font-style bottom-font">余额：{{userInfo.Banlance}}</text>
 				</div>
 				<div class='money'>
-					<text class="font-style bottom-font">下注：{{orderMoney}}</text>
+					<text class="font-style bottom-font">已选下注：{{orderMoney}}</text>
+				</div>
+				<div class='money'>
+					<text class="font-style bottom-font">成功下注：{{lastOrderMoney}}</text>
 				</div>
 			</div>
 
@@ -569,7 +574,7 @@
 				<text class="shou-qi">记录</text>
 			</div> -->
 
-			<div class="quanlu" @click="setShowtable" v-if="visible">
+			<div class="quanlu" @click="setShowtable" :class="{'opacity-0': !visible}">
 				<text class="shou-qi" v-if="showtable">下注</text>
 				<text class="shou-qi" v-else>全路</text>
 			</div>
@@ -608,7 +613,8 @@
 				timeData: null,
 				nowTime: null,
 				timesCurrent: null,
-				timer: null
+				timer: null,
+				lastOrderMoney: 0
 			}
 		},
 		onLoad() {
@@ -717,6 +723,7 @@
 					Money: this.orderMoney
 				}
 				await this.addOrder(payload)
+				this.lastOrderMoney = this.orderMoney
 				this.getUserInfo(this.id)
 			},
 			goHome() {
@@ -763,6 +770,7 @@
 						toast(`当前开奖结果为：${first}:${second}`)
 						this.getUserInfo(this.id)
 						this.getGameTable()
+						this.lastOrderMoney = 0
 					}
 					if (this.timesCurrent === 0) {
 						clearTimeout(this.timer)
@@ -1303,5 +1311,17 @@
 		z-index: 1000;
 		background-color: #e92525;
 		justify-content: center;
+	}
+	
+	.dice-table-wrapper {
+		position: fixed;
+		left: 0;
+		top: 40px;
+		right: 0;
+		bottom: 40px;
+		/* background-color: #fff; */
+	}
+	.opacity-0 {
+		opacity: 0;
 	}
 </style>
