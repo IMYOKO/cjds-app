@@ -83,6 +83,11 @@
 		"style": {
 			"navigationBarTitleText": ""
 		}
+	}, {
+		"path": "pages/proxyUser",
+		"style": {
+			"navigationBarTitleText": ""
+		}
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

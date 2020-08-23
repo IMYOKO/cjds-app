@@ -1,5 +1,5 @@
 import BasicRequest from './index';
-import { baseURL } from './config'
+import { baseURL, proxyUserURL } from './config'
 
 const request = new BasicRequest();
 
@@ -9,21 +9,21 @@ const request = new BasicRequest();
  * @param {string} password 
  */
 const login = (data) => {
-    return request.post(`${baseURL}/AppLogin`, data);
+	return request.post(`${baseURL}/AppLogin`, data);
 }
 
 /**
  * 注册
  */
 const register = (data) => {
-    return request.post(`${baseURL}/Register`, data);
+	return request.post(`${baseURL}/Register`, data);
 }
 
 /** 
  * 获取验证码
 */
 const getSMS = (data) => {
-    return request.post(`${baseURL}/GetSMS`, data);
+	return request.post(`${baseURL}/GetSMS`, data);
 }
 
 /**
@@ -31,7 +31,7 @@ const getSMS = (data) => {
  * @param {string} tableId 0
  */
 const getUserInfo = (data) => {
-    return request.post(`${baseURL}/GetUserInfo`, data);
+	return request.post(`${baseURL}/GetUserInfo`, data);
 }
 
 /**
@@ -49,21 +49,21 @@ const getUserInfo = (data) => {
 	DS：单双类型
  */
 const getGameTable = (data) => {
-    return request.post(`${baseURL}/GetGameTable`, data);
+	return request.post(`${baseURL}/GetGameTable`, data);
 }
 
 /**
  * getRankList 获取排名
  */
 const getRankList = (data) => {
-    return request.post(`${baseURL}/GetPM`, data);
+	return request.post(`${baseURL}/GetPM`, data);
 }
 
 /**
  * AddOrder 获取排名
  */
 const addOrder = (data) => {
-    return request.post(`${baseURL}/AddOrder`, data, true);
+	return request.post(`${baseURL}/AddOrder`, data, true);
 }
 
 /**
@@ -71,7 +71,7 @@ const addOrder = (data) => {
  * @param {tableId}  
  */
 const getOrder = (data) => {
-    return request.post(`${baseURL}/GetOrder`, data, true);
+	return request.post(`${baseURL}/GetOrder`, data, true);
 }
 
 /**
@@ -79,7 +79,7 @@ const getOrder = (data) => {
  * @param {id}  
  */
 const revoke = (data) => {
-    return request.post(`${baseURL}/cd`, data, true);
+	return request.post(`${baseURL}/cd`, data, true);
 }
 
 /**
@@ -88,7 +88,7 @@ const revoke = (data) => {
  * @param {Newpassword}  
  */
 const updateTKPassWord = (data) => {
-    return request.post(`${baseURL}/UpdateTKPassWord`, data, true);
+	return request.post(`${baseURL}/UpdateTKPassWord`, data, true);
 }
 
 /**
@@ -97,7 +97,7 @@ const updateTKPassWord = (data) => {
  * @param {Newpassword}  
  */
 const updatePassWord = (data) => {
-    return request.post(`${baseURL}/UpdatePassWord`, data, true);
+	return request.post(`${baseURL}/UpdatePassWord`, data, true);
 }
 
 /**
@@ -109,7 +109,7 @@ const updatePassWord = (data) => {
  * Money：充值金额
  */
 const addRecharge = (data) => {
-    return request.post(`${baseURL}/AddRecharge`, data, true);
+	return request.post(`${baseURL}/AddRecharge`, data, true);
 }
 
 /**
@@ -122,7 +122,7 @@ const addRecharge = (data) => {
  * Tkmm：提款密码
  */
 const addWithdrawal = (data) => {
-    return request.post(`${baseURL}/AddWithdrawal`, data, true);
+	return request.post(`${baseURL}/AddWithdrawal`, data, true);
 }
 
 /**
@@ -134,39 +134,60 @@ const addWithdrawal = (data) => {
  * YTXMoney：已提现金额
  */
 const getWithdrawal = () => {
-    return request.post(`${baseURL}/Withdrawal`, {}, true);
+	return request.post(`${baseURL}/Withdrawal`, {}, true);
 }
 
 /**
  * getBankInfo 获取银行卡信息 收款方信息
  */
 const getBankInfo = () => {
-    return request.post(`${baseURL}/GetBankInfo`, {}, true);
+	return request.post(`${baseURL}/GetBankInfo`, {}, true);
 }
 
 /**
  * getZNX 获取小喇叭通知
  */
 const getZNX = () => {
-    return request.post(`${baseURL}/GetZNX`, {}, true);
+	return request.post(`${baseURL}/GetZNX`, {}, true);
 }
 
 /**
  * getGG 获取广告
  */
 const getGG = () => {
-    return request.post(`${baseURL}/GetGG`, {}, true);
+	return request.post(`${baseURL}/GetGG`, {}, true);
 }
 
 /**
  * getKj 获取开奖时间
  */
 const getKj = () => {
-    return request.get(`${baseURL}/getKj`, {});
+	return request.get(`${baseURL}/getKj`, {});
+}
+
+/**
+ * JoinProxy 用户加入分红代理
+ */
+const joinProxy = (data) => {
+	return request.post(`${proxyUserURL}/joinproxy`, data);
+}
+
+/**
+ * GetSubUser 用户加入分红代理
+ */
+const getSubUser = (proxyId, page, rows) => {
+	return request.get(`${proxyUserURL}/getsubuser?proxyId=${proxyId}&page=${page}&rows=${rows}`, {});
+}
+
+/**
+ * GetSubUser 用户加入分红代理
+ */
+const getProxy = (proxyId) => {
+	return request.get(`${proxyUserURL}/GetProxy?proxyId=${proxyId}`, {});
 }
 
 export default {
-    login,
+	login,
 	register,
 	getSMS,
 	getUserInfo,
@@ -183,5 +204,8 @@ export default {
 	getBankInfo,
 	getZNX,
 	getGG,
-	getKj
+	getKj,
+	joinProxy,
+	getSubUser,
+	getProxy
 }

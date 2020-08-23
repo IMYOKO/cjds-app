@@ -42,6 +42,7 @@
 	import iconTg from '@/assets/images/home/icon_tuiguang@2x.png'
 	import iconCz from '@/assets/images/home/icon_cz@2x.png'
 	import iconKf from '@/assets/images/home/icon_kefu@2x.png'
+	import iconDl from '@/assets/images/home/icon_daili@2x.png'
 	import iconBack from '@/assets/images/home/icon_back@2x.png'
 	import iconUser from '@/assets/images/home/user_icon@2x.png'
 	import iconMoney from '@/assets/images/home/jinbi@2x.png'
@@ -74,12 +75,14 @@
 						this.goRecharge()
 					},
 				},
-				// {
-				// 	key: 3,
-				// 	title: "在线客服",
-				// 	src: iconKf,
-				// 	handle: () => {}
-				// },
+				{
+					key: 3,
+					title: "代理",
+					src: iconDl,
+					handle: () => {
+						this.goDl()
+					}
+				},
 				{
 					key: 4,
 					title: "退出",
@@ -107,6 +110,11 @@
 			goRecharge() {
 				uni.redirectTo({
 					url: '/pages/recharge'
+				});
+			},
+			goDl() {
+				uni.redirectTo({
+					url: `/pages/proxyUser?Id=${this.userInfo.Id}`
 				});
 			}
 		}
@@ -233,7 +241,7 @@
 							}
 
 							&.item-3 {
-								width: 100/@rem;
+								width: 64/@rem; // 100
 							}
 
 							&.item-4 {

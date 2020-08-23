@@ -4,6 +4,7 @@ import User from './user'
 import Games from './games'
 import Common from './common'
 import Orders from './orders'
+import ProxyUser from './proxyUser'
 
 Vue.use(Vuex)
 
@@ -12,6 +13,7 @@ export default new Vuex.Store({
 		User,
 		Games,
 		Common,
-		Orders
+		Orders,
+		ProxyUser
 	}
 })

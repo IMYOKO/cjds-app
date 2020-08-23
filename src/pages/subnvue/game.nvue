@@ -83,6 +83,7 @@
 						<div class="dice-table-tr" v-for="(list, index) in gameList" :key='index'>
 							<div class="dice-table-td" v-for="(item, eq) in list" :key='`${index}-${eq}`'  :class="{'table-box-0': item[2] === 1 && item[0] > 0, 'table-box-1': item[2] === 0 && item[0] > 0}">
 								<text class="dice-table-text" v-if="item[0] > 0">{{item[0]}}:{{item[1]}}</text>
+								<text class="dice-table-text" v-else></text>
 							</div>
 						</div>
 					</div>
@@ -636,6 +637,9 @@
 			...mapActions("Games", ['addOrder', 'Kj', 'getGameTable']),
 			...mapActions("User", ["getUserInfo"]),
 			chooseMoney(value) {
+				if(this.showtable) {
+					return
+				}
 				if (typeof this.diceMoney === 'string') {
 					if (typeof value === 'string') {
 						return
@@ -649,6 +653,9 @@
 				this.updateDiceMoney(value)
 			},
 			chooseDice(item) {
+				if(this.showtable) {
+					return
+				}
 				if (!this.diceMoney) {
 					toast('请先选择下注金额')
 					return;
@@ -670,6 +677,9 @@
 				this.clearDiceData()
 			},
 			async onOk() {
+				if(this.showtable) {
+					return
+				}
 				if (this.diceMoney === 0) {
 					toast('请先选择下注金额')
 					return;
@@ -1228,9 +1238,10 @@
 	}
 
 	.dice-table-text {
-		font-size: 14px;
 		color: #fff;
-		padding: 4rpx 0;
+		height: 22px;
+		font-size: 14px;
+		line-height: 22px;
 	}
 
 	/* dice table end */

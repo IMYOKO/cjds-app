@@ -1,9 +1,10 @@
 import apis from "@/api/apis";
-import { toast }  from "@/utils/index.js"
+import { toast } from "@/utils/index.js"
 
 const state = {
 	token: uni.getStorageSync('token') || '',
 	userInfo: {
+		Id: null,
 		Banlance: 0,
 		UserName: ''
 	}
@@ -25,6 +26,7 @@ const mutations = {
 		uni.removeStorageSync('token')
 		state.token = ''
 		state.userInfo = {
+			Id: null,
 			Banlance: 0,
 			UserName: ''
 		}
