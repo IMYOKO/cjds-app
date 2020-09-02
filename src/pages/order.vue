@@ -29,7 +29,7 @@
 						<td>下注时间</td>
 						<td>交易前余额</td>
 						<td>下注余额</td>
-						<td>输赢</td>
+						<td>中奖金额</td>
 						<td>操作</td>
 					</tr>
 					<tr v-for="(item, index) in orderList" :key="index">

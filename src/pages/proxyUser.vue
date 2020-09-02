@@ -170,6 +170,7 @@
 	} from "vuex";
 	import Headers from "@/components/common/headers.vue"
 	import QRCode from 'qrcode'
+	const QR = require('@/utils/qrcode.js');
 	export default {
 		data() {
 			return {
@@ -237,7 +238,7 @@
 			scanCode() {
 				uni.scanCode({
 					onlyFromCamera: true,
-					success: function(res) {
+					success: (res) => {
 						console.log('条码类型：' + res.scanType);
 						console.log('条码内容：' + res.result);
 						this.proxyId = res.result
@@ -249,7 +250,10 @@
 			},
 			async generateQR(text) {
 				try {
-					const qrcodeurl = await QRCode.toDataURL(text)
+					// const qrcodeurl = await QRCode.toDataURL(text)
+					// console.log(qrcodeurl)
+					const qrcodeurl = await QR.createQrCodeImg(text)
+					// console.log(qrcodeurl)
 					this.qrcodeurl = qrcodeurl
 				} catch (err) {
 					console.error(err)
@@ -364,6 +368,8 @@
 		image {
 			width: 360/@rem;
 			height: 360/@rem;
+			padding: 10/@rem;
+			background-color: #fff;
 		}
 	}
 

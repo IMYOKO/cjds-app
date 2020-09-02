@@ -201,7 +201,7 @@ const actions = {
 	}, payload) {
 		try {
 			await apis.addOrder(payload)
-			toast('下单成功');
+			toast('下注成功');
 			commit('updateDiceMoney', 0)
 			commit('clearDiceData')
 			// uni.showModal({
@@ -215,7 +215,7 @@ const actions = {
 			// 	}
 			// })
 		} catch (error) {
-			toast('下单失败');
+			toast('下注失败');
 			throw Error(error)
 		}
 	},
@@ -226,7 +226,14 @@ const actions = {
 			const res = await apis.getKj()
 			return Promise.resolve(res);
 		} catch (error) {
-			console.log('sss')
+			return Promise.reject(error);
+		}
+	},
+	async getPrizeNo(){
+		try {
+			const res = await apis.getPrizeNo()
+			return Promise.resolve(res);
+		} catch (error) {
 			return Promise.reject(error);
 		}
 	}

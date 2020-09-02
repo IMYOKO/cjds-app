@@ -634,10 +634,10 @@
 		},
 		methods: {
 			...mapMutations("Games", ['updateDiceMoney', 'clearDiceData', 'updateDiceData']),
-			...mapActions("Games", ['addOrder', 'Kj', 'getGameTable']),
+			...mapActions("Games", ['addOrder', 'Kj', 'getGameTable', 'getPrizeNo']),
 			...mapActions("User", ["getUserInfo"]),
 			chooseMoney(value) {
-				if(this.showtable) {
+				if(this.showtable || !this.visible) {
 					return
 				}
 				if (typeof this.diceMoney === 'string') {
@@ -653,7 +653,7 @@
 				this.updateDiceMoney(value)
 			},
 			chooseDice(item) {
-				if(this.showtable) {
+				if(this.showtable || !this.visible) {
 					return
 				}
 				if (!this.diceMoney) {
@@ -673,11 +673,14 @@
 				});
 			},
 			onCancel() {
+				if(this.showtable || !this.visible) {
+					return
+				}
 				this.updateDiceMoney(0)
 				this.clearDiceData()
 			},
 			async onOk() {
-				if(this.showtable) {
+				if(this.showtable || !this.visible) {
 					return
 				}
 				if (this.diceMoney === 0) {
@@ -727,13 +730,20 @@
 					toast('未到下注时间')
 					return
 				}
+				if (this.timeData && this.timeData.no === '') {
+					toast('下注期号有误')
+					return
+				}
+				const QS = await this.getPrizeNo()
+				const Money = this.orderMoney
 				const payload = {
 					GameTableId: this.id,
 					PlayType: this.payType,
-					Money: this.orderMoney
+					Money,
+					QS
 				}
 				await this.addOrder(payload)
-				this.lastOrderMoney = this.orderMoney
+				this.lastOrderMoney = Money
 				this.getUserInfo(this.id)
 			},
 			goHome() {

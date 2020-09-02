@@ -24,4 +24,4 @@ const domain = DOMAIN_CONFIG.dev;
 // }
 
 export const baseURL = `${domain.common}/api`;
-export const proxyUserURL = `${domain.common}/api`;
+export const proxyUserURL = `${domain.common}/proxyuser`;

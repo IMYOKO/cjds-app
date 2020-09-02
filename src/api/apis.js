@@ -60,7 +60,7 @@ const getRankList = (data) => {
 }
 
 /**
- * AddOrder 获取排名
+ * AddOrder 下注
  */
 const addOrder = (data) => {
 	return request.post(`${baseURL}/AddOrder`, data, true);
@@ -169,21 +169,29 @@ const getKj = () => {
  * JoinProxy 用户加入分红代理
  */
 const joinProxy = (data) => {
-	return request.post(`${proxyUserURL}/joinproxy`, data);
+	return request.post(`${baseURL}/joinproxy`, data);
 }
 
 /**
  * GetSubUser 用户加入分红代理
  */
 const getSubUser = (proxyId, page, rows) => {
-	return request.get(`${proxyUserURL}/getsubuser?proxyId=${proxyId}&page=${page}&rows=${rows}`, {});
+	return request.get(`${baseURL}/getsubuser?proxyId=${proxyId}&page=${page}&rows=${rows}`, {});
 }
 
 /**
  * GetSubUser 用户加入分红代理
  */
 const getProxy = (proxyId) => {
-	return request.get(`${proxyUserURL}/GetProxy?proxyId=${proxyId}`, {});
+	return request.get(`${baseURL}/GetProxy?proxyId=${proxyId}`, {});
+}
+
+
+/**
+ * GetPrizeNo 获取期号
+ */
+const getPrizeNo = () => {
+	return request.get(`${proxyUserURL}/GetPrizeNo`, {});
 }
 
 export default {
@@ -207,5 +215,6 @@ export default {
 	getKj,
 	joinProxy,
 	getSubUser,
-	getProxy
+	getProxy,
+	getPrizeNo
 }

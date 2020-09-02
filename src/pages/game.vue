@@ -20,7 +20,7 @@
 				timer: null
 			}
 		},
-		onLoad(option) {
+		async onLoad(option) {
 			// #ifdef APP-PLUS  
 			this.plusReady()
 			// #endif
