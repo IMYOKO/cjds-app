@@ -21,9 +21,9 @@
 				</div>
 				<div class="time-wrapper">
 					<template v-if="timeData">
-						<text class="font-style" v-if="nowTime < timeData.startBet">—</text>
-						<text class="font-style" v-else-if="nowTime > timeData.endBet">—</text>
-						<text class="font-style fz-24" v-else>{{timeData.endBet - nowTime}}</text>
+						<text class="font-style c-e92525" v-if="nowTime < timeData.startBet">—</text>
+						<text class="font-style c-e92525" v-else-if="nowTime > timeData.endBet">—</text>
+						<text class="font-style fz-24 c-e92525" v-else>{{timeData.endBet - nowTime}}</text>
 					</template>
 				</div>
 				<div class="button-wrapper">
@@ -555,6 +555,9 @@
 			</template>
 
 			<div class="dice-table-bottom">
+				<div class='money' v-if="tableItem">
+					<text class="font-style bottom-font">{{tableItem.TableName}}</text>
+				</div>
 				<div class='money'>
 					<text class="font-style bottom-font">余额：{{userInfo.Banlance}}</text>
 				</div>
@@ -606,6 +609,8 @@
 		toast,
 		showLoading
 	} from '@/utils/index.js';
+	// import gameStartMp3 from "@/assets/mp3/game_start.mp3";
+	// import gameEndtMp3 from "@/assets/mp3/game_end.mp3";
 	export default {
 		data() {
 			return {
@@ -615,10 +620,15 @@
 				nowTime: null,
 				timesCurrent: null,
 				timer: null,
-				lastOrderMoney: 0
+				lastOrderMoney: 0,
+				tableItem: null,
+				startSoundContext: null,
+				endSoundContext: null
 			}
 		},
 		onLoad() {
+			const tableItem = this.gameTableList.find(i => i.Id.toString() === this.id)
+			this.tableItem = tableItem
 			this.getKj()
 		},
 		onHide() {
@@ -629,7 +639,7 @@
 		},
 		computed: {
 			...mapState('User', ['userInfo']),
-			...mapState('Games', ['id', 'moneyType', 'diceMoney', 'diceData', 'gameList']),
+			...mapState('Games', ['id', 'moneyType', 'diceMoney', 'diceData', 'gameList', 'gameTableList']),
 			...mapGetters('Games', ['orderMoney', 'payType', 'doubleMoney', 'singularMoney', 'temaMoney', 'limitMoney']),
 		},
 		methods: {
@@ -772,8 +782,9 @@
 					}
 					this.timeData = res
 					this.nowTime = res.nowSystem
-					this.timesCurrent = res.nextDraw - res.nowSystem + 2
+					this.timesCurrent = res.ok - res.nowSystem + 2
 					this.updateTimes();
+					return Promise.resolve(res)
 				} catch (error) {
 					console.log(error)
 				}
@@ -782,20 +793,47 @@
 				this.timer = setTimeout(() => {
 					this.timesCurrent--
 					this.nowTime++
+					// if (this.nowTime === this.timeData.startBet) {
+					// 	const {
+					// 		first,
+					// 		second
+					// 	} = this.timeData
+					// 	toast(`当前开奖结果为：${first}:${second}`)
+					// 	this.getUserInfo(this.id)
+					// 	this.getGameTable()
+					// 	this.lastOrderMoney = 0
+					// }
 					if (this.nowTime === this.timeData.startBet) {
-						const {
-							first,
-							second
-						} = this.timeData
-						toast(`当前开奖结果为：${first}:${second}`)
-						this.getUserInfo(this.id)
-						this.getGameTable()
-						this.lastOrderMoney = 0
+						// 开始下注
+						uni.$emit('start-bet')
+					}
+					if(this.nowTime === this.timeData.endBet) {
+						// 结束下注
+						uni.$emit('end-bet')
 					}
 					if (this.timesCurrent === 0) {
 						clearTimeout(this.timer)
 						this.clearKjTime()
-						this.getKj()
+						this.getUserInfo(this.id)
+						this.getGameTable()
+						this.lastOrderMoney = 0
+						this.getKj().then(res => {
+							const {
+								above_first,
+								above_second,
+								nowSystem,
+								startBet,
+								endBet,
+							} = res
+							toast(`当前开奖结果为：${above_first}:${above_second}`)
+							console.log(nowSystem, startBet, endBet)
+							console.log(nowSystem >= startBet && nowSystem < endBet)
+							if (nowSystem >= startBet && nowSystem < endBet) {
+								// 开始下注
+								uni.$emit('start-bet')
+							}
+							return
+						})
 						return
 					}
 					this.updateTimes()
@@ -805,7 +843,37 @@
 				this.timeData = null
 				this.nowTime = null
 				this.timesCurrent = null
-			}
+			},
+			// startSound() {
+			// 	if (this.startSoundContext) {
+			// 		return
+			// 	}
+			// 	const startSoundContext = uni.createInnerAudioContext();
+			// 	startSoundContext.autoplay = false;
+			// 	startSoundContext.loop = false;
+			// 	startSoundContext.volume = 0.6;
+			// 	startSoundContext.src = gameStartMp3;
+			// 	startSoundContext.onError((res) => {
+			// 		console.log(res.errMsg);
+			// 		console.log(res.errCode);
+			// 	});
+			// 	this.startSoundContext = startSoundContext
+			// },
+			// endSound() {
+			// 	if (this.endSoundContext) {
+			// 		return
+			// 	}
+			// 	const endSoundContext = uni.createInnerAudioContext();
+			// 	endSoundContext.autoplay = false;
+			// 	endSoundContext.loop = false;
+			// 	endSoundContext.volume = 0.6;
+			// 	endSoundContext.src = gameEndtMp3;
+			// 	endSoundContext.onError((res) => {
+			// 		console.log(res.errMsg);
+			// 		console.log(res.errCode);
+			// 	});
+			// 	this.endSoundContext = endSoundContext
+			// },
 		}
 	}
 </script>
@@ -881,9 +949,14 @@
 
 	.time-wrapper {
 		width: 50px; // 100
-		background-color: #e92525;
+		/* background-color: #e92525; */
+		background-color: #068f00;
 		justify-content: center;
 		align-items: center;
+	}
+	
+	.c-e92525 {
+		color: #e92525;
 	}
 
 	.money-item {

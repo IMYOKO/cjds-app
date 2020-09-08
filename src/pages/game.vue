@@ -11,18 +11,27 @@
 		mapMutations,
 		mapActions
 	} from "vuex";
+	import gameStartMp3 from "@/assets/mp3/game_start.mp3";
+	import gameEndtMp3 from "@/assets/mp3/game_end.mp3";
 	export default {
 		name: 'Video',
 		data() {
 			return {
 				Player: '',
 				currentWebview: null,
-				timer: null
+				timer: null,
+				startSoundContext: null,
+				endSoundContext: null
 			}
 		},
 		async onLoad(option) {
+			console.log('game onload')
 			// #ifdef APP-PLUS  
 			this.plusReady()
+			this.startSound()
+			this.endSound()
+			uni.$on('start-bet', this.startBet)
+			uni.$on('end-bet', this.endBet)
 			// #endif
 			const id = option.id || 0
 			this.updateGameTableId(id)
@@ -32,10 +41,21 @@
 		onHide() {
 			// #ifdef APP-PLUS  
 			this.Player.close()
+			uni.$off('start-bet', this.startBet)
+			uni.$off('end-bet', this.endBet)
+			this.startSoundContext = null
+			this.endSoundContext = null
 			// #endif
 		},
 		onUnload() {
 			this.clearData()
+			// #ifdef APP-PLUS
+			this.Player.close()
+			uni.$off('start-bet', this.startBet)
+			uni.$off('end-bet', this.endBet)
+			this.startSoundContext = null
+			this.endSoundContext = null
+			// #endif
 		},
 		methods: {
 			...mapMutations("Games", ['updateDiceMoney', 'clearDiceData', 'updateGameTableId']),
@@ -64,6 +84,42 @@
 				uni.redirectTo({
 					url: '/pages/home'
 				});
+			},
+			startSound() {
+				if (this.startSoundContext) {
+					return
+				}
+				const startSoundContext = uni.createInnerAudioContext();
+				startSoundContext.autoplay = false;
+				startSoundContext.loop = false;
+				startSoundContext.volume = 0.6;
+				startSoundContext.src = gameStartMp3;
+				startSoundContext.onError((res) => {
+					console.log(res.errMsg);
+					console.log(res.errCode);
+				});
+				this.startSoundContext = startSoundContext
+			},
+			endSound() {
+				if (this.endSoundContext) {
+					return
+				}
+				const endSoundContext = uni.createInnerAudioContext();
+				endSoundContext.autoplay = false;
+				endSoundContext.loop = false;
+				endSoundContext.volume = 0.6;
+				endSoundContext.src = gameEndtMp3;
+				endSoundContext.onError((res) => {
+					console.log(res.errMsg);
+					console.log(res.errCode);
+				});
+				this.endSoundContext = endSoundContext
+			},
+			startBet() {
+				this.startSoundContext.play()
+			},
+			endBet() {
+				this.endSoundContext.play()
 			}
 		}
 	}

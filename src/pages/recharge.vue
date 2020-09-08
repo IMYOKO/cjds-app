@@ -394,7 +394,7 @@
 					})
 					this.clearRechargePayload()
 				} catch (e) {
-					this.$toast('提交失败')
+					this.$toast(e.Log)
 				}
 			},
 			clearRechargePayload() {
@@ -458,7 +458,7 @@
 					})
 					this.clearWithdrawalPayload()
 				} catch (e) {
-					this.$toast('提现提交失败')
+					this.$toast(e.Log)
 				}
 			},
 			clearWithdrawalPayload() {

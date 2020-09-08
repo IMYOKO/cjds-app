@@ -4,7 +4,7 @@
 			<view class="title">游戏登录</view>
 			<view class="login-form-content">
 				<view class="form-item">
-					<input v-model="username" type="text" maxlength="11" name="" id="" placeholder="账号或手机号">
+					<input v-model="username" type="text" maxlength="11" name="" id="" placeholder="账号">
 				</view>
 				<view class="form-item">
 					<input v-model="password" type="password" maxlength="16" name="" id="" placeholder="密码">
