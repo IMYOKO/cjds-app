@@ -55,7 +55,8 @@
             "sdkConfigs" : {
                 "ad" : {}
             }
-        }
+        },
+        "nativePlugins" : {}
     },
     /* SDK配置 */
     "quickapp" : {},

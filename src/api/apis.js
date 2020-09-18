@@ -173,25 +173,31 @@ const joinProxy = (data) => {
 }
 
 /**
- * GetSubUser 用户加入分红代理
+ * GetSubUser 获取我的会员
  */
 const getSubUser = (proxyId, page, rows) => {
 	return request.get(`${baseURL}/getsubuser?proxyId=${proxyId}&page=${page}&rows=${rows}`, {});
 }
 
 /**
- * GetSubUser 用户加入分红代理
+ * getProxy 获取代理信息
  */
 const getProxy = (proxyId) => {
 	return request.get(`${baseURL}/GetProxy?proxyId=${proxyId}`, {});
 }
 
-
 /**
  * GetPrizeNo 获取期号
  */
 const getPrizeNo = () => {
-	return request.get(`${proxyUserURL}/GetPrizeNo`, {});
+	return request.get(`${baseURL}/GetPrizeNo`, {});
+}
+
+/**
+ * GetOrderTable 获取用户下注(已结算)情况
+ */
+const getOrderTable = (userId, page, rows) => {
+	return request.get(`${baseURL}/GetOrderTable?userId=${userId}&page=${page}&rows=${rows}`, {});
 }
 
 export default {
@@ -216,5 +222,6 @@ export default {
 	joinProxy,
 	getSubUser,
 	getProxy,
-	getPrizeNo
+	getPrizeNo,
+	getOrderTable
 }

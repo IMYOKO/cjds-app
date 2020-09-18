@@ -9,6 +9,9 @@
 					<view class="choose-item" :class="{active: type === 3}" @click="upType(3)">
 						我的会员
 					</view>
+					<!-- <view class="choose-item" :class="{active: type === 4}" @click="upType(4)">
+						有效会员
+					</view> -->
 					<view class="choose-item" :class="{active: type === 1}" @click="upType(1)">
 						加入代理
 					</view>
@@ -106,23 +109,25 @@
 						<td>用户名</td>
 						<td>昵称</td>
 						<td>手机号</td>
+						<td>是否为有效会员</td>
+						<td>操作</td>
 					</tr>
 					<tr v-for="(item, index ) in list" :key="index">
 						<td>{{item.Id}}</td>
 						<td>{{item.UserName}}</td>
 						<td>{{item.NickName}}</td>
 						<td>{{item.Phone}}</td>
+						<td>{{item.effective ? "是" : "否"}}</td>
+						<td>
+							<text class="xq" @click="showVipUserDetail(item.Id)">查看详情</text>
+						</td>
 					</tr>
 				</table>
 			</view>
 			<view class="total">
 				<text @click="getMoreList" v-if="page < totalPage">显示更多</text>
-				<text @click="getMoreList" v-else>暂无更多</text>
+				<text v-else>暂无更多</text>
 			</view>
-			<!-- <view class="total">
-				<text>{{page}} / {{totalPage}}</text>
-				<text>共 {{total}} 条</text>
-			</view> -->
 		</view>
 		<!-- order end -->
 		<view class="pages-wrapper password-wrapper" v-if="type === 1">
@@ -160,6 +165,8 @@
 				</view>
 			</view>
 		</view>
+		
+		<VipUserDetail v-if="vipUserDetailVisible" @upVipUserDetail="upVipUserDetail" :userId="detailId" />
 	</div>
 </template>
 
@@ -169,11 +176,13 @@
 		mapActions
 	} from "vuex";
 	import Headers from "@/components/common/headers.vue"
+	import VipUserDetail from "@/components/common/vip-user-detail.vue"
 	import QRCode from 'qrcode'
 	const QR = require('@/utils/qrcode.js');
 	export default {
 		data() {
 			return {
+				detailId: null,
 				type: 0,
 				userId: null,
 				proxyId: '',
@@ -211,19 +220,23 @@
 					UserName: "",
 					TypeText: "",
 					AuditText: ""
-				}
+				},
+				vipUserDetailVisible: false
 			}
 		},
 		onLoad(option) {
 			this.userId = option.Id || null
 			if (this.userId != null) {
 				this.generateQR(this.userId)
-				this.getSubUser()
 				this.getProxy()
 			}
 		},
+		onUnload() {
+			this.clearListData()
+		},
 		components: {
-			Headers
+			Headers,
+			VipUserDetail
 		},
 		watch: {
 			page() {
@@ -234,6 +247,17 @@
 			...mapActions('ProxyUser', ['getUserQR']),
 			upType(type) {
 				this.type = type
+				if (type === 3) {
+					this.getSubUser()
+				} else {
+					this.clearListData()
+				}
+			},
+			clearListData() {
+				this.page = 1
+				this.list = []
+				this.total = 0
+				this.totalPage = 0
 			},
 			scanCode() {
 				uni.scanCode({
@@ -264,6 +288,10 @@
 					this.$toast('请输入代理人ID')
 					return
 				}
+				if (this.proxyId === this.userId) {
+					this.$toast('代理用户和用户不能为同一人')
+					return
+				}
 				try {
 					const res = await this.$api.joinProxy({
 						proxyId: this.proxyId,
@@ -271,7 +299,7 @@
 					})
 					this.$toast('操作成功')
 				} catch (e) {
-					this.$toast('操作失败')
+					this.$toast(e.Log)
 					console.log(e)
 				}
 			},
@@ -292,6 +320,9 @@
 			async getProxy() {
 				try {
 					const res = await this.$api.getProxy(this.userId)
+					if(!res) {
+						return
+					}
 					if(res.Type === 1) {
 						res.TypeText = '分红代理'
 					}
@@ -314,6 +345,16 @@
 				} catch (err) {
 					console.error(err)
 				}
+			},
+			upVipUserDetail(flag) {
+				this.vipUserDetailVisible = flag
+			},
+			setDetailId(id) {
+				this.detailId = id
+			},
+			showVipUserDetail(id) {
+				this.upVipUserDetail(true);
+				this.setDetailId(id)
 			}
 		},
 	}
@@ -482,6 +523,12 @@
 						font-size: 20/@rem;
 						padding: 30/@rem 5/@rem;
 						line-height: 1.2;
+						
+						.xq {
+							padding: 5/@rem 10/@rem;
+							background-color: #1e1a17;
+							border: 1px solid rgba(255, 255, 255, 0.2);
+						}
 					}
 				}
 			}

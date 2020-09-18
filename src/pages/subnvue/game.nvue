@@ -828,6 +828,7 @@
 							toast(`当前开奖结果为：${above_first}:${above_second}`)
 							console.log(nowSystem, startBet, endBet)
 							console.log(nowSystem >= startBet && nowSystem < endBet)
+							// uni.$emit('start-bet')
 							if (nowSystem >= startBet && nowSystem < endBet) {
 								// 开始下注
 								uni.$emit('start-bet')
